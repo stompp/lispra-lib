@@ -1,6 +1,6 @@
 <?php
 
-function lispra_modal($attr = null, $content = null) { ?>
+function lispra_modal($attr = null, $content = "") { ?>
     <div class="modal fade" lispra-modal tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog " role="document">
             <div class="modal-content">
@@ -53,7 +53,7 @@ function lispra_hideable_alert() { ?>
 <?php
 
 //function lispra_add_title_form($lispra_component_type = "add-title-form", $opts = array()) { 
-function lispra_add_title_form($attr, $content = null) {
+function lispra_add_title_form($attr, $content = "") {
     $attrs_string = array_to_attrs_string(getIfSet($attr["attrs"], array()));
     $placeholder = getIfSet($attr["input-title-placeholder"], "...");
     $title_html = getIfSet($attr["form-title-html"]);
@@ -92,7 +92,7 @@ function lispra_add_title_form($attr, $content = null) {
 
 <?php
 
-function lispra_div_list_group($attr, $content = null) {
+function lispra_div_list_group($attr, $content = "") {
     $attrs_string = array_to_attrs_string(getIfSet($attr["attrs"], array()));
     ?>
     <div <?php echo $attrs_string; ?> ><?php echo getIfSet($content, ""); ?></div>
@@ -100,7 +100,7 @@ function lispra_div_list_group($attr, $content = null) {
 
 <?php
 
-function lispra_list_group($attr, $content = null) {
+function lispra_list_group($attr, $content = "") {
     $attrs_string = array_to_attrs_string($attr["attrs"], array("class" => "list-group"));
     ?>
     <ul <?php echo $attrs_string; ?> ></ul>
@@ -109,7 +109,7 @@ function lispra_list_group($attr, $content = null) {
 
 <?php
 
-function lispra_user_list_of_lists_panel($attr = null, $content = null) { ?>
+function lispra_user_list_of_lists_panel($attr = null, $content = "") { ?>
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
@@ -141,7 +141,7 @@ function lispra_user_list_of_lists_panel($attr = null, $content = null) { ?>
 
 <?php
 
-function lispra_user_list_panel($attr = null, $content = null) { ?>
+function lispra_user_list_panel($attr = null, $content = "") { ?>
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
@@ -172,7 +172,7 @@ function lispra_user_list_panel($attr = null, $content = null) { ?>
 
 <?php
 
-function lispra_user_tests_panel($attr = null, $content = null) { ?>       
+function lispra_user_tests_panel($attr = null, $content = "") { ?>       
     <div class="container">
 
     <?php lispra_user_list_of_lists_panel(); ?>

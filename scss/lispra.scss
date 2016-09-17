@@ -1,0 +1,161 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 04-sep-2016, 2:36:11
+    Author     : josem
+*/
+@charset "UTF-8";
+
+$moradico: #583e7e;
+
+@mixin admin-body-fix( $offset: 0 ) {
+    $narrow-offset: 101px;
+    $wide-offset: 87px;
+    @if $offset != 0 and type-of($offset) == 'number' {
+        $narrow-offset: $narrow-offset + $offset;
+        $wide-offset: $wide-offset + $offset;
+    }
+    .admin-bar & {
+        padding-top: $narrow-offset !important;
+       
+        @media screen and (min-width: 783px) {
+            padding-top: $wide-offset !important;
+        }
+    }
+}
+
+@mixin admin-sticky-fix( $offset: 0 ) {
+    $narrow-offset: 46px;
+    $wide-offset: 32px;
+    @if $offset != 0 and type-of($offset) == 'number' {
+        $narrow-offset: $narrow-offset + $offset;
+        $wide-offset: $wide-offset + $offset;
+    }
+    .admin-bar & {
+        top: $narrow-offset !important;
+        position: absolute !important;
+        @media screen and (min-width: 783px) {
+            top: $wide-offset !important;
+            position: fixed !important;
+
+
+        }
+    }
+}
+
+.modal {
+  text-align: center;
+  padding: 0 !important;
+  &:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    /*margin-right: -4px;*/
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+
+
+/*btn-flex*/
+.btn-flex {
+    display: flex;
+    align-items: stretch;
+    align-content: stretch;
+    height: 50px;
+    border-style: none;
+    .btn {
+        /*border-style: none;*/
+        /*border-radius: 0px;*/
+        min-width: 48px !important;
+        font-size: 18px !important;
+        color: whitesmoke !important;
+    }
+    .btn-flex-main-btn, .btn-flex-main {
+        flex-grow: 1;
+        text-align: left;
+        font-weight: bold;
+    }
+}
+
+.btn-flex-main-btn, .btn-flex-main {
+    background-color: #5bc0de;
+}
+
+.btn-flex-options-btn {
+    background-color: #000000;
+}
+
+.btn-complete {
+    background: #26B99A;
+}
+
+.btn-pending {
+    background: #d9534f;
+}
+
+/* add-title-form */
+.lispra-add-title-form-title-input {
+    border-radius: 0px;
+    height: 50px;
+    font-size: 18px;
+}
+
+.lispra-add-title-form-add-btn {
+    margin-right: 0px;
+    background-color: #5bc0de;
+    color: whitesmoke;
+    border-radius: 0px;
+    height: 50px;
+    min-width: 48px !important;
+    font-size: 18px;
+}
+
+.lispra-add-title-form-group {
+    margin-bottom: 0px !important;
+
+
+}
+
+/*#lispra_top_nav .nav-menu {
+  background: #583e7e !important;
+  color: #000 !important;
+}*/
+
+/*.right_col, .main-container, .container-body, .customize-support {
+  background: #583e7e !important;
+  color: #fff !important;
+}
+
+.panel {
+  background: #583e7e !important;
+  color: #000 !important;
+}*/
+
+
+#lispra_top_nav{
+    /*margin-left: 230px;*/
+    /*overflow: scroll !important;*/
+     padding-right: 10px;
+     
+}
+.sticky-header{
+    position: fixed;
+    top: 0;
+    @include admin-sticky-fix;
+}
+#lispra-page-content{
+    padding-top: 55px;
+    padding-left: 10px;
+    padding-right: 10px;
+    @include admin-body-fix;
+}
+
