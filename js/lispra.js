@@ -62,133 +62,7 @@ function getElementBottomPx($e) {
 
 
 }
-//// LISPRA Navar with wp admin bar
-//$(document).ready(function () {
-//
-//    var     wp_admin_bar = "#wpadminbar",
-//            lispra_top_nav = "#lispra_top_nav",
-//            lispra_page_content = "#lispra-page-content";
-//            
-//
-//    startStickyBT("#lispra_top_nav", "#wpadminbar","top");
-//    startStickyBT("#lispra-page-content", "#lispra_top_nav","padding-top");
-//
-//
-//
-//
-//});
-//
-//function startStickyBT(b, t,c) {
-//
-//    $(b).css(c, getElementBottomPx($(t)) + "px");
-//    $(window).resize(function () {
-////        $(b).css(c, getElementBottomPx($(t)) + "px");
-//        updateStickyBT(b, t,c);
-//    });
-////    }
-//
-//}
-//
-//function updateStickyBT(b, t,c) {
-////    showPNotify({
-////        title: t,
-////        text: "Bottom is : " + getElementBottomPx($(t))
-////
-////    });
-//
-//    if ($(t).css("position") == "fixed") {
-//        $(b).css(c, getElementBottomPx($(t)) + "px");
-////                $(b).css("padding-bottom", getElementBottomPx($(b)) + "px");
-//        $(window).off("scroll", function () {
-//            updateStickyBTScrollUpdater(b, t,c);
-//        });
-//    } else if ($(t).css("position") == "absolute") {
-////          $(b).css(c, getElementBottomPx($(t)) + "px");
-//        $(window).scroll(function () {
-//            updateStickyBTScrollUpdater(b, t,c);
-//        });
-////                navBarSticktoAbsoulteWPAdminBarScrollUpdater();
-//    }else {
-//         $(b).css(c, getElementBottomPx($(t)) + "px");
-//         updateStickyBTScrollUpdater(b, t,c);
-//    }
-//
-//}
-//
-//function updateStickyBTScrollUpdater(b, t,c) {
-//
-//    var scroll = $(window).scrollTop();
-//    if (typeof (scroll) === "undefined") {
-//        scroll = 0;
-//    }
-//    if ($(t).length)
-//        if ($(b).length) {
-//            var top = 0;
-//            var minTop = getElementBottomPx($(t));
-//            if (typeof (minTop) === "undefined") {
-//                minTop = 0;
-//            }
-//            var offset = (minTop - scroll);
-//            if (offset > 0) {
-//                top = Math.min(offset, minTop);
-//            } else
-//                top = minTop;
-//
-//            $(b).css(c, minTop + "px");
-////            $(b).css("padding-bottom", getElementBottomPx($(b)) + "px");
-//        }
-//
-//}
 
-
-// LISPRA Navar with wp admin bar
-//$(document).ready(function () {
-//
-//    if ($("#wpadminbar").length) {
-//        $("#lispra_top_nav").css("top", $("#wpadminbar").height() + "px");
-//        updateTopNavBarPosition();
-//        $(window).resize(function () {
-//            updateTopNavBarPosition();
-//        });
-//    }
-//
-//
-//});
-//
-//function updateTopNavBarPosition() {
-//    if ($("#wpadminbar").length)
-//        if ($("#lispra_top_nav").length) {
-//            if ($("#wpadminbar").css("position") == "fixed") {
-//                $("#lispra_top_nav").css("top", $("#wpadminbar").height() + "px");
-//                $(window).off("scroll", navBarSticktoAbsoulteWPAdminBarScrollUpdater);
-//            } else if ($("#wpadminbar").css("position") == "absolute") {
-////                a$("#lispra_top_nav").css("top", $("#wpadminbar").height() + "px");
-//                $(window).scroll(navBarSticktoAbsoulteWPAdminBarScrollUpdater);
-////                navBarSticktoAbsoulteWPAdminBarScrollUpdater();
-//            }
-//        }
-//}
-//
-//function navBarSticktoAbsoulteWPAdminBarScrollUpdater() {
-//
-//    var scroll = $(window).scrollTop();
-//
-//    if ($("#wpadminbar").length)
-//        if ($("#lispra_top_nav").length) {
-//            var top = 0;
-//            var minTop = $("#wpadminbar").height();
-//            var offset = (minTop - scroll);
-//            if (offset > 0) {
-//
-//                top = Math.min(offset, minTop);
-//            }
-////            console.log("lispra_top_nav top offset : " + top + "px");
-//            $("#lispra_top_nav").css("top", top + "px");
-//        }
-//
-//}
-//
-//
 
 
 
@@ -212,7 +86,7 @@ Lispra.user = function () {}
 Lispra.components = function () {}
 Lispra.components.todoListsList = function () {}
 Lispra.components.todoList = function () {}
-//Lispra.components.get = function () {}
+
 
 
 
@@ -245,6 +119,7 @@ Lispra.components.updateUserTodoListsList = function ($jquery_selector_str) {
                 },
                 function (xhr, textStatus, errorThrown) {
 //                    console.log("[lispra-component='user-todo-lists-list'] update failed");
+                    showPNotify({title: "updateUserTodoListsList " + textStatus, text: "Error :" + errorThrown, type: "error"});
                 });
     }
 
@@ -311,6 +186,7 @@ Lispra.components.updateUserTodoList = function ($list) {
                 },
                 function (xhr, textStatus, errorThrown) {
                     console.log("[lispra-component='user-todo-list'] update failed");
+                    showPNotify({title: "[lispra-component='user-todo-list'] update failed " + textStatus, text: "Error :" + errorThrown, type: "error"});
                 });
     }
 
@@ -794,7 +670,10 @@ Lispra.components.getTodoListItem = function ($task, content) {
 
 Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
 
-    console.log("Lispra.user.action start");
+//    var actions_path = "../lispra_actions";
+//    var actions_path = "../lispra/actions.php";
+    var actions_path = "../api/lispra_beta/action/";
+    console.log("Lispra.user.action started");
     var d = {
         user_actions: [
             {
@@ -804,7 +683,7 @@ Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
         ]
     };
     $.post(
-            "../lispra_actions",
+            actions_path,
             JSON.stringify(d),
             f_success
             ).done(
@@ -812,8 +691,40 @@ Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
             ).fail(
             f_fail
             );
+
+
+//    $.post(
+//            actions_path,
+//            JSON.stringify(d),
+////            f_success
+//        function (data) {
+//                        console.log("Action done data is : " + data);
+//                    }
+//            )
+//            .done(
+//                    function (data) {
+//                        console.log("Action done data is : " + data);
+//                    })
+//            .fail(
+//                    function (xhr, textStatus, errorThrown) {
+////                showPNotify({title: "List task", text: "Task " + $task.title + " error on erase.", type: "error"});
+//                        console.log("Action faile error is : " + errorThrown);
+//                    });
     console.log("Lispra.user.action end");
 }
 
 
 
+$(document).ready(function () {
+
+ $("[lispra-component='lispra-test-api-box']").text("Cebolla");
+
+    if ($("[lispra-component='lispra-test-api-box']").length) {
+        $.get("../api/lispra_beta/hello_world/", function (data) {
+//        $(".result").html(data);
+            $("[lispra-component='lispra-test-api-box']").text(JSON.stringify(data));
+        alert(data);
+        });
+    }
+
+});
