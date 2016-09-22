@@ -36,13 +36,12 @@ if(function_exists("wp_get_current_user")){
     $lispra_user_id = intval($current_user_id);
 }
 
-
-
 if (intval($lispra_user_id) < 1) {
 //    echo "NO USER";
     die("NO USER");
     return;
 }
+
 $u = new LispraUser($lispra_user_id);
 if (!$u->isDataSet()) {
 //    echo "USER DATA NOT SET";

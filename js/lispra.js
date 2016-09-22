@@ -670,8 +670,6 @@ Lispra.components.getTodoListItem = function ($task, content) {
 
 Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
 
-//    var actions_path = "../lispra_actions";
-//    var actions_path = "../lispra/actions.php";
     var actions_path = "../api/lispra_beta/action/";
     console.log("Lispra.user.action started");
     var d = {
@@ -723,7 +721,7 @@ $(document).ready(function () {
         $.get("../api/lispra_beta/hello_world/", function (data) {
 //        $(".result").html(data);
             $("[lispra-component='lispra-test-api-box']").text(JSON.stringify(data));
-        alert(data);
+            console.log("lispra-component='lispra-test-api-box data is " +data);
         });
     }
 
