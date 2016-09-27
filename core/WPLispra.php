@@ -3,9 +3,6 @@
 include_once 'libs/DBHelper.php';
 include_once 'core.php';
 
-
-
-
 class LispraWPDBHelper extends DBHelper {
 
     private function setWordPressDBCredentials() {
@@ -52,14 +49,6 @@ class LispraDBHelper extends DBHelper {
 //        }
         $this->setDBCredentials(LISPRA_DATABASE_NAME, LISPRA_DATABASE_USER, LISPRA_DATABASE_PASS, LISPRA_DATABASE_HOST);
     }
-
-//    private function setWordPressDBCredentials() {
-//        if ($this->dbName != WP_DATABASE_NAME) {
-//            if ($this->connected)
-//                $this->close();
-//        }
-//        $this->setDBCredentials(WP_DATABASE_NAME, WP_DATABASE_USER, WP_DATABASE_PASS, WP_DATABASE_HOST);
-//    }
 
     function __construct() {
         parent::__construct();
@@ -250,7 +239,7 @@ class LispraUser extends ClassConverter {
                     if ($r)
                         $list_created = true;
 //                    var_dump(mysqli_fetch_assoc($r));
-
+                   
 
                     break;
 
@@ -264,7 +253,8 @@ class LispraUser extends ClassConverter {
                 return $this->getListHeader($list_id);
             }
         } else {
-            br("LIST INSERT FAILED");
+             $db->close();
+            return("LIST INSERT FAILED");
         }
         return null;
     }
@@ -644,14 +634,18 @@ class LispraUser extends ClassConverter {
                 return $this->updateListHeader($data);
                 break;
 
-
-
-
             default:
                 break;
         }
 
         return NULL;
+    }
+
+    public function executeActions($actions) {
+        foreach ($actions as $action) {
+            $r = $this->executeAction($action);
+            echo json_encode($r);
+        }
     }
 
 }

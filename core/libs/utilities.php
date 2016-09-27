@@ -78,6 +78,10 @@ function getIfSet(&$value, $default = null) {
     return isset($value) ? $value : $default;
 }
 
+function getRequestParameterIfSet($param,$default = null) {
+    return getIfSet($_REQUEST[$param],$default);
+    
+}
 function getRequestBody() {
     return file_get_contents('php://input');
 }
