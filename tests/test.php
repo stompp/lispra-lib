@@ -9,4 +9,7 @@
 
 $var = 14;
 
-echo getIfSet($var,15);
+$q = getRequestParameterIfSet("q","q not set");
+//echo getIfSet($var,15);
+
+echo $q;

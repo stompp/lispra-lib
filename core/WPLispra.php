@@ -473,11 +473,11 @@ class LispraUser extends ClassConverter {
 
         $list_id = intval(getIfSet($list_item_data[LISPRA_KEY_LIST_ID], -1));
         $list_item_id = intval(getIfSet($list_item_data[LISPRA_KEY_ID], -1));
-        br("list : $list_id item : $list_item_id");
+//        br("list : $list_id item : $list_item_id");
         if (($list_id < 1) || ($list_item_id < 1)) {
             return null;
         }
-        br("Ok list and item id");
+//        br("Ok list and item id");
 
         // check list header
         $list_header = $this->getListHeader($list_id);
@@ -527,10 +527,10 @@ class LispraUser extends ClassConverter {
         }
 
         $tableName = $list_header[LISPRA_KEY_LIST_TABLE];
-        br("tableName : $tableName");
-        br("d : " . json_encode($d));
+//        br("tableName : $tableName");
+//        br("d : " . json_encode($d));
         if ($db->tableExists($tableName)) {
-            br("Table exists");
+//            br("Table exists");
             $r = $db->updateFromAssocArray($tableName, $d, LISPRA_KEY_ID . " = $list_item_id");
             if ($r)
                 return true;

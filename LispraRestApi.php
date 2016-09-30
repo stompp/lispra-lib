@@ -4,7 +4,7 @@ include_once 'core/WPLispra.php';
 
 class LispraRESTApi {
 
-    protected $user;
+    public $user;
 
     public function __construct() {
         $this->user = $this->get_current_lispra_user();
@@ -56,8 +56,9 @@ class LispraRESTApi {
     }
 
     public function test_scr($name) {
- 
-        $scr = realpath(dirname(__FILE__))."/tests/$name.php";
+
+//        $scr = realpath(dirname(__FILE__))."/tests/$name.php";
+        $scr = realpath(dirname(__FILE__)) . "/test_scr.php";
         $out = "";
         ob_start();
         if (file_exists($scr)) {
@@ -65,13 +66,88 @@ class LispraRESTApi {
         } else {
             echo "TEST SCRIPT NOT FOUND";
         }
-         $out = ob_get_clean();
+        $out = ob_get_clean();
 
         return $out;
     }
 
+    function executeActions1($a) {
+        $u = get_current_lispra_user();
+        if (is_null($u)) {
+            echo_error("User is null");
+            return;
+        }
+        if (array_key_exists("user_actions", $a)) {
+            foreach ($a["user_actions"] as $action) {
+                $r = $u->executeAction($action);
 
+                $response = array(
+                    "isDataSet" => 1,
+                    "data" => $r
+                );
+                echo json_encode($response);
+            }
+        }
+    }
 
+    public function actions() {
+//        return array("isUserSet" => ($this->isUserSet()) ? "yes" : "no");
+//        
+        if (!$this->isUserSet()) {
+
+            return array("LispraRestApiMethod" => "actions", "Error" => "User not set");
+        }
+
+        $u = $this->getUser();
+        $c = getRequestBody();
+        if (isNullorEmpty($c)) {
+            return array("LispraRestApiMethod" => "actions", "Error" => "Content null or empty");
+        }
+        // parse content to assoc
+        $a = json_decode($c, true);
+        $e = json_last_error();
+        if ($e != JSON_ERROR_NONE) {
+            return array("LispraRestApiMethod" => "actions", "Error" => "JSON ERROR :" . json_last_error_msg());
+        }
+
+        $responses = array();
+
+        if (array_key_exists("user_actions", $a)) {
+            foreach ($a["user_actions"] as $action) {
+                $r = $u->executeAction($action);
+                $response = array(
+                    "isDataSet" => 1,
+                    "data" => $r
+                );
+                $responses[] = $response;
+            }
+        }
+
+        if (count($responses)) {
+            return $responses[0];
+        }
+
+        return array("LispraRestApiMethod" => "actions", "Error" => "JSON ERROR :" . json_last_error_msg());
+    }
+
+//    public function actions() {
+//        return array("isUserSet" => ($this->isUserSet()) ? "yes" : "no");
+//        
+//        $scr = realpath(dirname(__FILE__)) . "/actions.php";
+//        if (!file_exists($scr)) {
+//            return array("LispraRestApiMethod" => "actions", "Error" => "Script not found");
+//        }
+//        $out = "";
+//        ob_start();
+//        include_once $scr;
+//        $out = ob_get_clean();
+//
+//        if (isJson($out)) {
+//            return json_decode($out, true);
+//        }
+//        return array("LispraRestApiMethod" => "actions", "Error" => "Output not json");
+//    }
+//}
 }
 
 global $lispraREST;

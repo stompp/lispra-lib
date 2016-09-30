@@ -59,8 +59,6 @@ function getElementBottomPx($e) {
         return a1 + a2 + a3;
     }
     return 0;
-
-
 }
 
 
@@ -75,11 +73,6 @@ $(document).ready(function () {
         $(this).parent().addClass("hidden");
     });
 });
-
-
-
-
-
 function Lispra() {}
 Lispra.user = function () {}
 
@@ -96,22 +89,33 @@ Lispra.components.updateUserTodoListsList = function ($jquery_selector_str) {
     var $selector = "[lispra-component='user-todo-lists-list']";
     if (typeof ($jquery_selector_str) === 'string')
         $selector = $jquery_selector_str;
-
     if ($($selector).length) {
         Lispra.user.action(
                 "getLists",
                 "*",
                 function (data, status) {
-                    var o = JSON.parse(data);
-                    $($selector).empty();
-                    o.forEach(function addToList($list) {
-                        var item_content = 'id : ' + $list.list_id + ' name : ' + $list.list_name;
-                        var $item = Lispra.components.todoListsList.getItem($list, item_content);
-                        $($selector).append($item);
-//                        $($selector).each(function (i, e) {
-//                            $(this).append($item);
-//                        });
-                    });
+                    try {
+
+                        console.log(data);
+                        var o = JSON.parse(data);
+                           console.log(o.isDataSet);
+                        if (o.isDataSet === 1) {
+                             console.log(o.isDataSet);
+                            $($selector).empty();
+                            o.data.forEach(function addToList($list) {
+                                var item_content = 'id : ' + $list.list_id + ' name : ' + $list.list_name;
+                                var $item = Lispra.components.todoListsList.getItem($list, item_content);
+                                $($selector).append($item);
+                                //                        $($selector).each(function (i, e) {
+                                //                            $(this).append($item);
+                                //                        });
+                            });
+                        }
+
+                    } catch (e) {
+                        console.log(e);
+                    }
+
 
                 },
                 function (msg) {
@@ -131,7 +135,6 @@ Lispra.components.updateUserTodoList = function ($list) {
     if ($l.length) {
 
         var $list_id, $list_name;
-
         if (typeof ($list) === 'undefined') {
             $list_id = $l.first().attr('list_id');
         } else if (typeof ($list) === 'object') {
@@ -154,32 +157,34 @@ Lispra.components.updateUserTodoList = function ($list) {
 
             var form_title = $("[lispra-component='create-todo-list-item-form']")
                     .find("[lispra-component='add-title-form-title']");
-
             form_title.removeClass("hidden");
             form_title.text($list_name);
         } else
             $list_name = "List " + $list_id;
-
         Lispra.user.action(
                 "getListContent",
                 $list_id,
                 function (data, status) {
-                    var o = JSON.parse(data);
-                    $("[lispra-component='user-todo-list'][list_id='" + $list_id + "']").empty();
-                    o.forEach(
-                            function addToList($task) {
-                                $task["list_id"] = $list_id;
-                                var item_content = 'id : ' + $task._id + ' title : ' + $task.title;
+                    try {
+                        var o = JSON.parse(data);
+                        $("[lispra-component='user-todo-list'][list_id='" + $list_id + "']").empty();
+                        o.data.forEach(
+                                function addToList($task) {
+                                    $task["list_id"] = $list_id;
+                                    var item_content = 'id : ' + $task._id + ' title : ' + $task.title;
 //                                var $item = '<li class="list-group-item"><button type="button" class="btn close" aria-label="Close"><span aria-hidden="true">&times;</span></button><span >' + item_content + '</span></li>';
 //                                var $item_old = '<li class="list-group-item">' + item_content + '</li>';
-                                var $item = Lispra.components.getTodoListItem($task, item_content);
-                                $("[lispra-component='user-todo-list'][list_id='" + $list_id + "']").each(
-                                        function (i, e) {
-                                            $(this).append($item);
-                                        }
-                                );
-                            }
-                    );
+                                    var $item = Lispra.components.getTodoListItem($task, item_content);
+                                    $("[lispra-component='user-todo-list'][list_id='" + $list_id + "']").each(
+                                            function (i, e) {
+                                                $(this).append($item);
+                                            }
+                                    );
+                                }
+                        );
+                    } catch (e) {
+                        console.log(e);
+                    }
                 },
                 function (msg) {
                     console.log("[lispra-component='user-todo-list'] update done");
@@ -196,7 +201,6 @@ Lispra.components.getAddTitleFormElements = function ($f) {
 
     var $form_data = $f.serialize();
     var $data = formExtractDataAsObjet($f);
-
     var $btn = $f.find("[lispra-form-submit]");
     var $form_alert = $f.find("[lispra-dismissable-alert]").first();
     var $form_alert_content = $form_alert.children("[lispra-dismissable-alert-content]").first();
@@ -267,13 +271,10 @@ Lispra.components.setCreateTodoListFormSubmitFunction = function () {
             function (event) {
 
                 event.preventDefault();
-
                 var o = Lispra.components.getAddTitleFormElements($(this));
                 o.setLoadingMode();
-
                 var $title = o.getName("title");
                 var $list_class = "todo";
-
                 var $data = {
                     list_name: $title,
                     list_class: $list_class
@@ -319,7 +320,6 @@ Lispra.components.setCreateTodoListItemFormSubmitFunction = function () {
                 o.setLoadingMode();
                 var $title = o.data["title"];
                 var $list_id = $(this).attr("list_id");
-
                 if (typeof ($list_id) === 'undefined') {
                     o.showNotify({title: "[lispra-component='create-todo-list-item-form']", text: "'list_id undefined", type: "error"});
                     o.reset("error");
@@ -384,9 +384,7 @@ Lispra.components.todoListsList.getItem = function ($list, content) {
     var $btn_flex_test_options_btn4 = $('<button type="button" class="btn btn-flex-options-btn"><i class="fa fa-search"></i></button>');
     var $btn_flex_test_options_btn5 = $('<button type="button" class="btn btn-flex-options-btn"><i class="fa fa-search"></i></button>');
     var $btn_flex_test_options_btn6 = $('<button type="button" class="btn btn-flex-options-btn"><i class="fa fa-search"></i></button>');
-
     var $btn_flex_group = $('<div class="btn-group btn-flex"></div>');
-
     var $btn_flex_main_btn = $('<button type="" class="btn btn-flex-main-btn"></button>');
     $btn_flex_main_btn.append($list.list_name);
     $btn_flex_main_btn.click(
@@ -396,14 +394,11 @@ Lispra.components.todoListsList.getItem = function ($list, content) {
                 Lispra.components.updateUserTodoList($list);
                 console.log("show clicked list name is " + $list.list_name);
             });
-
     var editButton = $('<button type="button" class="btn btn-flex-options-btn"><i class="fa fa-edit"></i></button>');
     editButton.click(
             function () {
                 showPNotify({title: "", text: "Edit list clicked"});
             });
-
-
     var deleteButton = $('<button type="button" class="btn btn-flex-options-btn" lispra-action="deleteList"><i class="fa fa-trash"></i></button>');
     deleteButton.click(
             function () {
@@ -417,7 +412,6 @@ Lispra.components.todoListsList.getItem = function ($list, content) {
                                 console.log("[type='button'][lispra-action='deleteList'] success");
                                 Lispra.components.updateUserTodoListsList();
                                 showPNotify({title: "TODO Lists", text: "List " + $list.list_name + " deleted.", type: "info"});
-
                             },
                             function (data) {
 
@@ -436,19 +430,9 @@ Lispra.components.todoListsList.getItem = function ($list, content) {
                         );
             }
     );
-
-
-
-
-
-
-
-
     $btn_flex_group.append(editButton);
     $btn_flex_group.append($btn_flex_main_btn);
-
     $btn_flex_group.append(deleteButton);
-
 //    var $btn_flex_test_dropdown_btn = $('<button type="button" class="btn btn-flex-options-btn" data-toggle="dropdown" aria-haspopup="true" ><i class="fa fa-gear"></i></button>');
 //    var $btn_flex_test_dropdown_btn_menu = $('<ul class="dropdown-menu pull-right list-inline"></ul>');
 //    var $btn_flex_test_dropdown_btn_menu_btn_group = $('<div class="btn-group"></div>');
@@ -576,17 +560,13 @@ Lispra.components.getTodoListItem = function ($task, content) {
 
 
     var $btn_flex_test_options_btn6 = $('<button type="button" class="btn btn-flex-options-btn"><i class="fa fa-search"></i></button>');
-
     var $btn_flex_group = $('<div class="btn-group btn-flex"></div>');
-
-
     var $btn_flex_main_btn = $('<button type="button" class="btn btn-flex-main-btn"></button>');
     $btn_flex_main_btn.append($task.title);
     var cb_values = {
         class: ($task.status === 'pending') ? "btn btn-pending" : "btn btn-complete",
         icon: ($task.status === 'pending') ? "fa fa-close" : "fa fa-check"
     };
-
     var checked_button = $('<button class="' + cb_values.class + '" type="button"><i class="' + cb_values.icon + '"></i></button>');
     checked_button.click(
             function () {
@@ -603,7 +583,6 @@ Lispra.components.getTodoListItem = function ($task, content) {
                     _id: $task._id,
                     status: new_status
                 };
-
                 Lispra.user.action(
                         $action,
                         d,
@@ -615,11 +594,9 @@ Lispra.components.getTodoListItem = function ($task, content) {
                         function (xhr, textStatus, errorThrown) {
                             $(this).find('i').first().attr("class", cb_values.icon);
                             showPNotify({title: "List task", text: "Task " + $task.title + " error on status change.", type: "error"});
-
+                            showPNotify({title: textStatus, text: errorThrown, type: "error"});
                         });
             });
-
-
 //    var title_content = $('<span class="lispra-list-item-title"></span>');
 
 
@@ -647,7 +624,6 @@ Lispra.components.getTodoListItem = function ($task, content) {
                             function (xhr, textStatus, errorThrown) {
 
                                 showPNotify({title: "List task", text: "Task " + $task.title + " error on erase.", type: "error"});
-
                             });
                     dissmissModal();
                 };
@@ -658,19 +634,18 @@ Lispra.components.getTodoListItem = function ($task, content) {
                         );
             }
     );
-
     $btn_flex_group.append(checked_button);
     $btn_flex_group.append($btn_flex_main_btn);
     $btn_flex_group.append(dropDownDelete);
     return $btn_flex_group;
-
-
 }
 
 
 Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
 
-    var actions_path = "../api/lispra_beta/action/";
+//    var actions_path = "../api/lispra_beta/action/";
+    var actions_path = "../api/lispra_beta/actions/";
+//    var actions_path = "../lispra/actions.php";
     console.log("Lispra.user.action started");
     var d = {
         user_actions: [
@@ -689,8 +664,6 @@ Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
             ).fail(
             f_fail
             );
-
-
 //    $.post(
 //            actions_path,
 //            JSON.stringify(d),
@@ -715,13 +688,12 @@ Lispra.user.action = function (name, data, f_success, f_done, f_fail) {
 
 $(document).ready(function () {
 
- $("[lispra-component='lispra-test-api-box']").text("Cebolla");
-
+    $("[lispra-component='lispra-test-api-box']").text("Cebolla");
     if ($("[lispra-component='lispra-test-api-box']").length) {
         $.get("../api/lispra_beta/hello_world/", function (data) {
 //        $(".result").html(data);
             $("[lispra-component='lispra-test-api-box']").text(JSON.stringify(data));
-            console.log("lispra-component='lispra-test-api-box data is " +data);
+            console.log("lispra-component='lispra-test-api-box data is " + data);
         });
     }
 
