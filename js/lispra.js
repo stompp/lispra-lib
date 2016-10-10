@@ -98,9 +98,9 @@ Lispra.components.updateUserTodoListsList = function ($jquery_selector_str) {
 
                         console.log(data);
                         var o = JSON.parse(data);
-                           console.log(o.isDataSet);
+                        console.log(o.isDataSet);
                         if (o.isDataSet === 1) {
-                             console.log(o.isDataSet);
+                            console.log(o.isDataSet);
                             $($selector).empty();
                             o.data.forEach(function addToList($list) {
                                 var item_content = 'id : ' + $list.list_id + ' name : ' + $list.list_name;
@@ -696,5 +696,15 @@ $(document).ready(function () {
             console.log("lispra-component='lispra-test-api-box data is " + data);
         });
     }
+
+});
+
+
+$(document).ready(function () {
+
+    $.get("http://wplispra.riggitt.org/api/lispra_beta/getIdeas/", function (data) {
+        console.log(data);
+//            alert(data);
+    });
 
 });

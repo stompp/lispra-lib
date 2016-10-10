@@ -6,8 +6,11 @@
  * and open the template in the editor.
  */
 
-require_once 'lispra-config.php';
+define('LISPRA_LOG_FILE', realpath(dirname(__FILE__)) . '/lispra_beta_log.txt');
+
+require_once 'lispra-beta-config.php';
 require_once 'libs/utilities.php';
+require_once 'LispraLog.php';
 
 function wp_get_current_lispra_user_id() {
     if (function_exists("wp_get_current_user") && function_exists("get_current_user_id")) {
@@ -17,41 +20,15 @@ function wp_get_current_lispra_user_id() {
     return 0;
 }
 
-DEFINE('LISPRA_LOG_FILE', realpath(dirname(__FILE__)) . '/lispra_log.txt');
-
-class LispraLog {
-
-//     LispraLog::error(get_class($this)."::getIdeaByID ".$exc->getMessage());
-
-    public static function log($msg) {
-        $s = sprintf("[%s] %s\r\n", sqlTimeStamp(), $msg);
-        return file_put_contents(LISPRA_LOG_FILE, $s, FILE_APPEND | LOCK_EX);
-    }
-
-    public static function info($msg) {
-        return self::log("Info:  $msg");
-    }
-
-    public static function error($msg) {
-        return self::log("Error: $msg");
-    }
-
-    public static function classLog($class, $method, $msg) {
-        return self::log("$class::$method $msg");
-    }
-
-    public static function classError($class, $method, $msg) {
-        return self::classLog($class, $method, "Error : $msg");
-    }
-
-    public static function getLogContent() {
-        return file_get_contents(LISPRA_LOG_FILE);
-    }
-
-}
-
 class PDOBPSCreator {
 
+//INSERT INTO subs
+//  (subs_name, subs_email, subs_birthday)
+//VALUES
+//  (?, ?, ?)
+//ON DUPLICATE KEY UPDATE
+//  subs_name     = VALUES(subs_name),
+//  subs_birthday = VALUES(subs_birthday)
     public static function insertValues($table, $columns) {
 
         $params = array();
@@ -124,6 +101,7 @@ interface LispraKeys {
     const TAG_TITLE = 'tag_title';
 
 }
+
 
 class LispraCore {
 

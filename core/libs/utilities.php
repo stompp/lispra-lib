@@ -30,14 +30,11 @@ function array2reg($a) {
 function isNullorEmpty($d) {
     if (is_null($d)) {
         return true;
-    } else if (is_array($d)) {
-        if (count($d) < 1) {
-            return true;
-        }
-    } else if (is_string($d)) {
-        if (strlen($d) < 1) {
-            return true;
-        }
+    }
+    if (is_string($d) && (strlen($d) < 1)) {
+        return true;
+    } elseif (is_array($d) && (count($d) < 1)) {
+        return true;
     }
     return false;
 }
@@ -78,10 +75,10 @@ function getIfSet(&$value, $default = null) {
     return isset($value) ? $value : $default;
 }
 
-function getRequestParameterIfSet($param,$default = null) {
-    return getIfSet($_REQUEST[$param],$default);
-    
+function getRequestParameterIfSet($param, $default = null) {
+    return getIfSet($_REQUEST[$param], $default);
 }
+
 function getRequestBody() {
     return file_get_contents('php://input');
 }
@@ -112,41 +109,6 @@ function sprintf_assoc($string = '', $replacement_vars = array(), $prefix_charac
 function printf_assoc($string = '', $replacement_vars = array(), $prefix_character = '%') {
     echo sprintf_assoc($string, $replacement_vars, $prefix_character);
 }
-
-//function sqlValue($value, $type) {
-//  $value = get_magic_quotes_gpc() ? stripslashes($value) : $value;
-//  //$value = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($value) : mysqli_escape_string($value);
-//  switch ($type) {
-//    case "text":
-//      $value = ($value != "") ? "'" . $value . "'" : "NULL";
-//      break;
-//    case "int":
-//      $value = ($value != "") ? intval($value) : "NULL";
-//      break;
-//    case "double":
-//      $value = ($value != "") ? "'" . doubleval($value) . "'" : "NULL";
-//      break;
-//    case "date":
-//      $value = ($value != "") ? "'" . $value . "'" : "NULL";
-//      break;
-//  }
-//  return $value;
-//}
-//function arrayElementsToSqlValues($values, $types){
-//	//foreach($values as $s) $s = sqlValue($s,$type);
-//	for($n = 0 ; $n < count($values) ; $n++){
-//		$values[$n] = sqlValue($values[$n],$type[$n]);
-//	}
-//	return $values;
-//}
-//function arrayElementsToSqlValue($values, $type){
-//	//foreach($values as $s) $s = sqlValue($s,$type);
-//	for($n = 0 ; $n < count($values) ; $n++){
-//		$values[$n] = sqlValue($values[$n],$type);
-//	}
-//	return $values;
-//}
-
 
 function arrayToSQLValues(&$array) {
     $keys = array_keys($array);
@@ -267,100 +229,6 @@ function mysqli_fetch_assocs($result) {
     return $rows;
 }
 
-//function executeInsert($con,$tableName,$valuesArray,$columnsArray = NULL){
-//	$s = createInsertStatement($tableName,$valuesArray,$columnsArray);
-//	mysqli_query($con,$s);
-//}
-
-/*
-  function checkIfDBTableExists($tableName,$dbname,$username,$password, $host = "localhost"){
-
-  $con = mysqli_connect($host,$username,$password,$dbname);
-  $tableExists  = false;
-  // Check connection
-  if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-  }else{
-  $result = mysqli_query($con,"SHOW TABLES LIKE '".$tableName."'");
-  if($row = mysqli_fetch_array($result))$tableExists = true;
-  }
-  return $tableExists;
-  }
-  function printDBTable($tableName,$dbname,$username,$password, $host = "localhost"){
-
-  $con = mysqli_connect($host,$username,$password,$dbname);
-  // Check connection
-  if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-  }else{
-  $result = mysqli_query($con,"SELECT * FROM ".$tableName);
-  if($result != false){
-  while($row = mysqli_fetch_array($result)) {
-  //echo "Row Count : ". count($row);br();
-  for($n = 0 ; $n < count($row) ; $n++){
-  if(isset($row[$n])) {echo $row[$n]." ";}
-  }
-  //$str =  implode ( " " , $row);
-  //var_dump($row);
-  br();
-  }
-  }
-  mysqli_close($con);
-  }
-
-  }
-
-  function truncateDBTable($tableName,$dbname,$username,$password, $host = "localhost"){
-
-  $con = mysqli_connect($host,$username,$password,$dbname);
-  $ok = false;
-  // Check connection
-  if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-  }else{
-  $result = mysqli_query($con,"TRUNCATE TABLE ".$tableName);
-  if($result) $ok = true;
-  mysqli_close($con);
-  }
-
-  return $ok;
-
-  }
-
-  function clearDBTable($tableName,$dbname,$username,$password, $host = "localhost"){
-
-  $con = mysqli_connect($host,$username,$password,$dbname);
-  $ok = false;
-  // Check connection
-  if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-  }else{
-  $result = mysqli_query($con,"DELETE FROM ".$tableName);
-  if($result) $ok = true;
-  mysqli_close($con);
-  }
-
-  return $ok;
-
-  }
-
-  function dropDBTable($tableName,$dbname,$username,$password, $host = "localhost"){
-
-  $con = mysqli_connect($host,$username,$password,$dbname);
-  $ok = false;
-  // Check connection
-  if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-  }else{
-  $result = mysqli_query($con,"DROP TABLE ".$tableName);
-  if($result) $ok = true;
-  mysqli_close($con);
-  }
-
-  return $ok;
-
-  }
- */
 function array_string_keys(&$array) {
     $keys = array_keys($array);
     $out = array();
@@ -600,16 +468,6 @@ function array_replace_values($array, $old, $new) {
     return $array;
 }
 
-//function copyFromAssocToObject(&$o,$data){
-//        $object_keys = array_keys(get_object_vars($o));
-//        foreach ($object_keys as $key) {
-//            if(array_key_exists($key, $data)){
-//                $o->{$key} = $data[$key];
-//            }
-//            
-//        }
-//}
-
 function isJson($string) {
     if (!is_string($string))
         return false;
@@ -709,9 +567,7 @@ function array_to_attrs_string($attrs, $default_attrs = null) {
 
     $attrs_str = "";
     $attrs_chunks = array();
-    $a = ((isNullorEmpty($default_attrs)) 
-            ?(((isNullorEmpty($attrs)) ? array(): $attrs))
-            :(((isNullorEmpty($attrs))? $default_attrs : array_merge($default_attrs, $attrs)))
+    $a = ((isNullorEmpty($default_attrs)) ? (((isNullorEmpty($attrs)) ? array() : $attrs)) : (((isNullorEmpty($attrs)) ? $default_attrs : array_merge($default_attrs, $attrs)))
             );
 
 
@@ -724,7 +580,7 @@ function array_to_attrs_string($attrs, $default_attrs = null) {
     }
 
 
-    //avoid repeated
+//avoid repeated
     $o = array();
     foreach ($attrs_chunks as $chunk) {
 
@@ -743,6 +599,17 @@ function array_to_attrs_string($attrs, $default_attrs = null) {
     return $attrs_str;
 }
 
+function sprintf_on_values_and_implode($sprintf_str, $glue, $array) {
+
+    if (isNullorEmpty($array)) {
+        return "";
+    }
+
+    foreach ($array as &$a) {
+        $a = str_replace("%s", $a, $sprintf_str);
+    }
+    return implode($glue, $array);
+}
 
 class JsonObjectHelper {
 
@@ -879,5 +746,268 @@ class ClassConverter {
 
 }
 
+class TagsUtils {
+
+    /**
+     * Parse string Will parse tags string or array to a valid tags string
+     * @param type $tags_str_or_array String or array containing tags
+     * @return string Formatted tags string such as #tag1 #tag2 #tag3... #tagN
+     */
+    public static function parseToString($tags_str_or_array) {
+        $tags = tags_array($tags_str_or_array);
+        if (count($tags) > 0) {
+            return "#" . implode(" #", $tags);
+        }
+        return "";
+    }
+
+    /**
+     * Parse string Will parse tags string or array to a valid tags array
+     * @param type $tags_str_or_array String or array containing tags
+     * @return array Array of tags with all values validated. No # or spaces inside each tag 
+     */
+    public static function parseToArray($tags_str_or_array) {
+        $out = array();
+        if (is_string($tags_str_or_array)) {
+            $out = array_values(array_filter(explode(' ', str_replace("#", " ", $tags_str_or_array)), 'strlen'));
+        } elseif (is_array($tags_str_or_array)) {
+            $out = str_replace(array("#", " "), "", $tags_str_or_array);
+            $out = array_values(array_filter($out, 'strlen'));
+        }
+
+        return $out;
+    }
+
+}
+
+function tags_string($tags) {
+    $out = "";
+    $pieces = tags_array($tags);
+    if (count($pieces)) {
+        $out = "#" . implode(" #", $pieces);
+    }
+    return $out;
+}
+
+function tags_array($tags) {
+    $out = array();
+    if (is_string($tags)) {
+        $out = array_values(array_filter(explode(' ', str_replace("#", " ", $tags)), 'strlen'));
+    } elseif (is_array($tags)) {
+        $out = str_replace(array("#", " "), "", $tags);
+        $out = array_values(array_filter($out, 'strlen'));
+    }
+
+    return $out;
+}
+
+class ArrayUtils {
+
+//    public static function isNullOrEmpty($array){
+//        if(is_null($var))
+//    }
+
+    public static function defaults($array, $defaults) {
+        foreach ($defaults as $key => $value) {
+            if(!array_key_exists($key, $array)){
+                $array[$key] = $value;
+            }
+            
+        }
+        return $array;
+    }
+
+    public static function getFormattedValues($array, $format, $replacement_in_format) {
+
+        $values = array_values($array);
+        foreach ($values as &$value) {
+            $value = str_replace($replacement_in_format, $value, $format);
+        }
+
+        return $values;
+    }
+
+    public static function getFormattedKeys($array, $format, $replacement_in_format) {
+
+
+        $keys = array_keys($array);
+        foreach ($keys as &$key) {
+            $key = str_replace($replacement_in_format, $key, $format);
+        }
+
+        return $keys;
+    }
+
+    public static function formatKeys($array, $format, $replacement_in_format) {
+
+        $f = array();
+        foreach ($array as $key => $value) {
+            $f[str_replace($replacement_in_format, $key, $format)] = $value;
+        }
+        return $f;
+    }
+
+    public static function formatValues($array, $format, $replacement_in_format) {
+
+        $f = array();
+        foreach ($array as $key => $value) {
+            $f[$key] = str_replace($replacement_in_format, $value, $format);
+        }
+        return $f;
+    }
+
+    public static function addPrefixToKeys($assoc, $prefix) {
+        return self::formatKeys($array, "$prefix?", "?");
+    }
+
+    public static function str_replace_keys($string, $array) {
+
+        if (strlen($string) && count($array)) {
+//            $values = array_values($array);
+//            $keys = array_keys($array);
+            return str_replace(array_keys($array), array_values($array), $string);
+        }
+        return $string;
+    }
+
+    public static function sprintf_assoc($string, $assoc, $key_prefix = '%') {
+
+        if ((strlen($string)) && is_array($assoc) && (count($assoc) > 0)) {
+            return str_replace(self::getFormattedKeys($assoc, "$key_prefix{?}", "{?}"), array_values($assoc), $string);
+        }
+//        if ((strlen($string)) && is_array($assoc) && (count($assoc) > 0)) {
+//            $f = self::formatKeys($assoc, "$key_prefix?", "?");
+//            return self::str_replace_keys($string, $f);
+////            foreach ($assoc as $key => $value) {
+////                $string = str_replace($key_prefix . $key, $value, $string);
+////            }
+//        }
+        return $string;
+    }
+
+    public static function toArray($source, $delimiterIfString = ",") {
+        $out = array();
+        if (isNullorEmpty($source)) {
+            return $out;
+        }
+
+        if (is_string($source)) {
+            return explode($delimiterIfString, $source);
+        } elseif (is_numeric($source)) {
+            return array($source);
+        } elseif (is_array($source)) {
+            return $source;
+        } elseif (is_object($out)) {
+            return array_values((array) $source);
+        }
+
+        return $out;
+    }
+
+    public static function getNotSetKeys($array, $keys = null) {
+        $out = array();
+        if (is_null($keys)) {
+            $keys = array_keys($array);
+        }
+        foreach ($keys as $key) {
+            if (!isset($array[$key])) {
+                $out[] = $key;
+            }
+        }
+        return $out;
+    }
+
+    public static function getEmptyKeys($array, $keys = null) {
+
+        $out = array();
+        if (is_null($keys)) {
+            $keys = array_keys($array);
+        }
+        foreach ($keys as $key) {
+            if (isNullorEmpty($array[$key])) {
+                $out[] = $key;
+            }
+        }
+        return $out;
+    }
+
+    public static function areKeysSet($array, $keys) {
+        foreach ($keys as $key) {
+            if (!isset($array[$key])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function keysExist($array, $keys) {
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $array)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function areKeysNull($array, $keys) {
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $array) || is_null($array[$key])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function isKeyNull($array, $key) {
+        return self::areKeysNull($array, array($key));
+    }
+
+    public static function areKeysEmpty($array, $keys) {
+        foreach ($keys as $key) {
+            if (isNullorEmpty($array[$key])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function isKeyEmpty($array, $key) {
+        return self::areKeysEmpty($array, array($key));
+    }
+
+    public static function areKeysNullOrEmpty($array, $keys) {
+        foreach ($keys as $key) {
+            if (isNullorEmpty($array[$key])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function isKeyNullOrEmpty($array, $key) {
+        return self::areKeysNullOrEmpty($array, array($key));
+    }
+
+    public static function checkKeys($array, $existingKeys, $notNullOrEmptyKeys) {
+
+        if (!isNullorEmpty($array)) {
+            return false;
+        }
+        if (!isNullorEmpty($existingKeys)) {
+            $o = self::keysExist($array, $existingKeys);
+            if ($o) {
+                return $o;
+            }
+        }
+        if (!isNullorEmpty($notNullOrEmptyKeys)) {
+            $o = self::areKeysNullOrEmpty($array, $notNullOrEmptyKeys);
+            if ($o) {
+                return $o;
+            }
+        }
+        return true;
+    }
+
+}
 
 ?>

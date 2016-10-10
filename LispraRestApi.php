@@ -28,20 +28,6 @@ class LispraRESTApi {
         return null;
     }
 
-    public function test() {
-        $action = array(
-            "name" => "getLists",
-            "data" => "null"
-        );
-
-        $this->executeAction($action);
-//        if($this->isUserSet()){
-//            echo "LISPRA REST API TEST ak aka kaka";
-//        }else {
-//            echo "ATRAASSSSS";
-//        }
-    }
-
     public function isUserSet() {
         if ($this->user === null) {
             return false;
@@ -55,7 +41,7 @@ class LispraRESTApi {
         return $this->user;
     }
 
-    public function test_scr($name) {
+    public function test_scr() {
 
 //        $scr = realpath(dirname(__FILE__))."/tests/$name.php";
         $scr = realpath(dirname(__FILE__)) . "/test_scr.php";
@@ -69,25 +55,6 @@ class LispraRESTApi {
         $out = ob_get_clean();
 
         return $out;
-    }
-
-    function executeActions1($a) {
-        $u = get_current_lispra_user();
-        if (is_null($u)) {
-            echo_error("User is null");
-            return;
-        }
-        if (array_key_exists("user_actions", $a)) {
-            foreach ($a["user_actions"] as $action) {
-                $r = $u->executeAction($action);
-
-                $response = array(
-                    "isDataSet" => 1,
-                    "data" => $r
-                );
-                echo json_encode($response);
-            }
-        }
     }
 
     public function actions() {
@@ -130,24 +97,20 @@ class LispraRESTApi {
         return array("LispraRestApiMethod" => "actions", "Error" => "JSON ERROR :" . json_last_error_msg());
     }
 
-//    public function actions() {
-//        return array("isUserSet" => ($this->isUserSet()) ? "yes" : "no");
-//        
-//        $scr = realpath(dirname(__FILE__)) . "/actions.php";
-//        if (!file_exists($scr)) {
-//            return array("LispraRestApiMethod" => "actions", "Error" => "Script not found");
+    public function test() {
+        $action = array(
+            "name" => "getLists",
+            "data" => "null"
+        );
+
+        $this->executeAction($action);
+//        if($this->isUserSet()){
+//            echo "LISPRA REST API TEST ak aka kaka";
+//        }else {
+//            echo "ATRAASSSSS";
 //        }
-//        $out = "";
-//        ob_start();
-//        include_once $scr;
-//        $out = ob_get_clean();
-//
-//        if (isJson($out)) {
-//            return json_decode($out, true);
-//        }
-//        return array("LispraRestApiMethod" => "actions", "Error" => "Output not json");
-//    }
-//}
+    }
+
 }
 
 global $lispraREST;

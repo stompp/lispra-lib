@@ -8,36 +8,27 @@
 
 
 //include_once 'core/lispra-core.php';
-include_once 'core/LispraIdeas.php';
+include_once 'LispraIdeas.php';
 
 if (!LispraCore::isUserSet()) {
     exit("YOU CANNOT PASSS!!!");
 }
 
+$user = LispraCore::getCurrentLispraUserID();
+$data = array(
+    LispraIdeasKeys::IDEA_TITLE => "Idea 29",
+    LispraIdeasKeys::IDEA_DESC => "Descripción para idea 29",
+    LispraIdeasKeys::IDEA_TAGS => "web java android aruino something");
 
-$i = array(
-    LispraIdeas::IDEA_TITLE => "akaka IDEA TITLE",
-    LispraIdeas::IDEA_DESC => "aakak IDEA DESCRIPTIONS",
-    LispraIdeas::IDEA_TAGS => "pollas#nabos bukakes #teen hardcore"
-);
-echo json_encode(LispraIdeas::removeTagsFromIdea(11,"pollas#nabos bukakes #teen hardcore"));
+$response = array();
 
-//$st = "Hola     k ase  t y u  k ase   e ker   ";
-////echo $st;
-//$chunks = explode(" ", $st);
-//
-//
-//$o = array();
-//foreach ($chunks as $c){
-//    if(strlen($c)>0){
-//        $o[] = $c;
-//    }
-//}
-//echo json_encode($o);
-//$ideas = new LispraIdeas();
-//echo json_encode($ideas->getIdea(3));
+$reponse["antes"] = LispraIdeas::userGet($user);
+LispraIdeas::userDelete(1,"30,31,1458");
 
+//$reponse["UPDATED"] = LispraIdeas::userUpdate(1, 29,$data);
+$reponse["despues"] = LispraIdeas::userGet($user);
+echo json_encode($reponse);
+//echo json_encode(TagsUtils::parseToArray($data[LispraIdeas::IDEA_TAGS]));
+//echo json_encode(LispraIdeas::userGet($user));
+?>
 
-
-
-    

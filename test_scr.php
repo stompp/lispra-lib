@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-include_once realpath(dirname(__FILE__)).'/core/lispra-core.php';
+require_once realpath(dirname(__FILE__)).'/core/lispra-beta-core.php';
 //echo "gola";
 
 //if(!LispraCore::isUserSet()){
